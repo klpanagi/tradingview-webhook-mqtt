@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from commlib.node import Node
 from commlib.transports.mqtt import ConnectionParameters
 from commlib.msg import MessageHeader, PubSubMessage
@@ -15,12 +15,10 @@ MQTT_TOPIC=os.getenv("MQTT_TOPIC", 'tv_alerts')
 
 class TradingViewSignal(PubSubMessage):
     header: MessageHeader = MessageHeader()
-    data: Dict[str, Any]
+    data: Any
 
 
 app = FastAPI()
-
-print(MQTT_HOST, MQTT_PORT)
 
 node = Node(node_name='sensors.sonar.front',
             connection_params=ConnectionParameters(
@@ -41,7 +39,14 @@ async def root():
 
 
 @app.post("/webhook")
-async def webhook(alert: Dict[Any, Any]):
-    print(alert)
-    msg = TradingViewSignal(data=alert)
+async def webhook(request: Request):
+    body = await request.body()
+    headers = request.headers
+    qparams = request.query_params
+    pparams = request.path_params
+    if 'text/plain' in headers['content-type']:
+        data = str(body)
+    elif 'application/json' in headers['content-type']:
+        data = request.json()
+    msg = TradingViewSignal(data=data)
     mqtt_pub.publish(msg)
