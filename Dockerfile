@@ -12,3 +12,5 @@ RUN pip install -r requirements.txt
 
 COPY .env /app/.env
 COPY app.py /app/app.py
+
+CMD [ "uvicorn", "app:app", "--reload", "--port", "8080" ]

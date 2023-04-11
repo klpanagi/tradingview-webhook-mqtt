@@ -1,9 +1,19 @@
 ---
 version: '3.9'
+# name: ''
+
 services:
-    tradingview-webhook-mqtt-bridge:
-        build: .
-        container_name: tradingview-webhook-mqtt-bridge
-        ports:
-            - '80:8080'
-        restart: unless-stopped
+  tradingview-webhook-mqtt-bridge:
+    build: .
+    container_name: tradingview-webhook-mqtt-bridge
+    ports:
+      - '80:8080'
+    restart: unless-stopped
+    command: [
+      "uvicorn",
+      "app:app",
+      "--reload",
+      "--workers", "4",
+      "--host", "0.0.0.0",
+      "--port", "8080",
+      '--root-path', '/']
