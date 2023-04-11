@@ -1,0 +1,9 @@
+---
+version: '3.9'
+services:
+    tradingview-webhook-mqtt-bridge:
+        build: .
+        container_name: tradingview-webhook-mqtt-bridge
+        ports:
+            - '80:8080'
+        restart: unless-stopped
