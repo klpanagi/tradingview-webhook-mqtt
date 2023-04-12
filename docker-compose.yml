@@ -42,12 +42,6 @@ services:
         restart: true
     ports:
       - '80:8080'
-    environment:
-      - MQTT_HOST=emqx.local
-      - MQTT_PORT=1883
-      - MQTT_USERNAME=
-      - MQTT_PASSWORD=
-      - MQTT_TOPIC=tv_alerts
     command: [
       "uvicorn",
       "app:app",
@@ -59,7 +53,6 @@ services:
       tv-wh-mqtt:
         aliases:
         - bridge.local
-
 
 networks:
   tv-wh-mqtt:
