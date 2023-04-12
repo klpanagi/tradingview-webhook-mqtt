@@ -4,13 +4,16 @@ from commlib.node import Node
 from commlib.transports.mqtt import ConnectionParameters
 from commlib.msg import MessageHeader, PubSubMessage
 from typing import Dict, Any
+from dotenv import load_dotenv
 
+load_dotenv()
 
 MQTT_HOST=os.getenv("MQTT_HOST", 'localhost')
 MQTT_PORT=os.getenv("MQTT_PORT", 1883)
 MQTT_USERNAME=os.getenv("MQTT_USERNAME", '')
 MQTT_PASSWORD=os.getenv("MQTT_PASSWORD", '')
 MQTT_TOPIC=os.getenv("MQTT_TOPIC", 'tv_alerts')
+SEC_KEY=os.getenv("SEC_KEY", 'DEFAULT_KEY')
 
 
 class TradingViewSignal(PubSubMessage):
@@ -47,6 +50,20 @@ async def webhook(request: Request):
     if 'text/plain' in headers['content-type']:
         data = str(body)
     elif 'application/json' in headers['content-type']:
-        data = request.json()
+        data = await request.json()
     msg = TradingViewSignal(data=data)
     mqtt_pub.publish(msg)
+
+    if 'text/plain' in headers['content-type']:
+        raise ValueError('Alert Message must be of type application/json')
+    elif 'application/json' in headers['content-type']:
+        data = await request.json()
+        if 'key' not in data:
+            raise ValueError('Missing key!')
+        key = data['key']
+        if key == SEC_KEY:
+            msg = TradingViewSignal(data=data)
+            mqtt_pub.publish(msg)
+            return 200
+        else:
+            return 400
