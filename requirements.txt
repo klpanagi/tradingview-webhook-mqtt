@@ -3,3 +3,4 @@ fastapi==0.95.0
 uvicorn
 pydantic
 commlib-py==0.10.6
+python-dotenv
