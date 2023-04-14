@@ -47,12 +47,6 @@ async def webhook(request: Request):
     headers = request.headers
     qparams = request.query_params
     pparams = request.path_params
-    if 'text/plain' in headers['content-type']:
-        data = str(body)
-    elif 'application/json' in headers['content-type']:
-        data = await request.json()
-    msg = TradingViewSignal(data=data)
-    mqtt_pub.publish(msg)
 
     if 'text/plain' in headers['content-type']:
         raise ValueError('Alert Message must be of type application/json')
