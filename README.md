@@ -31,6 +31,8 @@ Build and run using docker compose
 docker compose build && docker compose up
 ```
 
+The example `docker-compose.yml` file includes an EMQX broker for testing.
+
 The current implementation requires TV Alert messages to be defined in `application/json` and must follow the following model.
 
 ```json
@@ -46,3 +48,11 @@ the webhook server, as it implements a lightweight authorization layer. The
 value of the `key` is defined on the server side via the `SEC_KEY` environmental
 variable as earlier mentioned.
 
+
+## Use in other deployments
+
+Build the image using the following command:
+
+```
+docker build -t <MY_IMAGE_NAME> .
+```
