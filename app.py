@@ -6,8 +6,6 @@ from commlib.msg import MessageHeader, PubSubMessage
 from typing import Dict, Any
 from dotenv import load_dotenv
 
-load_dotenv()
-
 MQTT_HOST=os.getenv("MQTT_HOST", 'localhost')
 MQTT_PORT=os.getenv("MQTT_PORT", 1883)
 MQTT_USERNAME=os.getenv("MQTT_USERNAME", '')

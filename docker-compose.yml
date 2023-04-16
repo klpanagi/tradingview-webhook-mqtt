@@ -14,9 +14,9 @@ services:
       - emqx-data:/opt/emqx/data
       - emqx-log:/opt/emqx/log
       - emqx-etc:/opt/emqx/etc
-    # ports:
-    #   - "1883:1883"  # mqtt:tcp
-    #   - "8883:8883"  # mqtt:tcp:ssl
+    ports:
+      - "1883:1883"  # mqtt:tcp
+      # - "8883:8883"  # mqtt:tcp:ssl
     #   - "8083:8083"  # mqtt:ws
     #   - "8084:8084"  # mqtt:ws:ssl
     #   - "8081:8081"  # http:management
@@ -42,6 +42,8 @@ services:
         restart: true
     ports:
       - '80:8080'
+    env_file:
+      - .env
     command: [
       "uvicorn",
       "app:app",

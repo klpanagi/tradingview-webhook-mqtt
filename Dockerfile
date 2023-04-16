@@ -10,7 +10,6 @@ RUN pip install --upgrade pip
 COPY ./requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
-COPY .env /app/.env
 COPY app.py /app/app.py
 
 CMD [ "uvicorn", "app:app", "--port", "8080", "--host", "0.0.0.0" ]
