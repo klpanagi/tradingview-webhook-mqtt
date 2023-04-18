@@ -6,5 +6,5 @@ run:
 	docker compose build && docker compose up
 
 docker:
-	docker build -t klpanagi/tv-wh-mqtt-bridge${TAG} -f Dockerfile .
+	docker build -t klpanagi/tradingview-mqtt-bridge${TAG} -f Dockerfile .
 
