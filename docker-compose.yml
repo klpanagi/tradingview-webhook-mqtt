@@ -17,11 +17,11 @@ services:
     ports:
       - "1883:1883"  # mqtt:tcp
       # - "8883:8883"  # mqtt:tcp:ssl
-    #   - "8083:8083"  # mqtt:ws
-    #   - "8084:8084"  # mqtt:ws:ssl
-    #   - "8081:8081"  # http:management
-    #   - "18083:18083"  # http:dashboard
-    #   - "61613:61613"  # web-stomp gateway
+      # - "8083:8083"  # mqtt:ws
+      # - "8084:8084"  # mqtt:ws:ssl
+      # - "8081:8081"  # http:management
+      # - "18083:18083"  # http:dashboard
+      # - "61613:61613"  # web-stomp gateway
     networks:
       tv-wh-mqtt:
         aliases:
@@ -42,8 +42,13 @@ services:
         restart: true
     ports:
       - '80:8080'
-    env_file:
-      - .env
+    environment:
+      - MQTT_HOST=emqx.local
+      - MQTT_PORT=1883
+      - MQTT_USERNAME=
+      - MQTT_PASSWORD=
+      - MQTT_TOPIC=tradingview/alerts
+      - SEC_KEY=123123
     command: [
       "uvicorn",
       "app:app",
@@ -54,7 +59,7 @@ services:
     networks:
       tv-wh-mqtt:
         aliases:
-        - bridge.local
+        - mqtt-bridge.local
 
 networks:
   tv-wh-mqtt:
