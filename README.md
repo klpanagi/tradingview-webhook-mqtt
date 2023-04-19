@@ -15,7 +15,7 @@ Implemented using [FastAPI](https://github.com/tiangolo/fastapi) and [commlib-py
 
 Set the following environment variables in the `docker-compose.yml` file accordingly.
 
-```bash
+```yaml
 environment:
   - MQTT_HOST=emqx.local
   - MQTT_PORT=1883
