@@ -46,9 +46,9 @@ The current implementation requires TV Alert messages to be defined in `applicat
 
 ```json
 {
-    'key': 'SECURITY_KEY',
-    'data': {},
-    'topic': 'OPTIONAL_MQTT_TOPIC'
+    "key": "SECURITY_KEY",
+    "data": {},
+    "topic": "OPTIONAL_MQTT_TOPIC"
 }
 ```
 

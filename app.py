@@ -16,7 +16,7 @@ SEC_KEY=os.getenv("SEC_KEY", 'DEFAULT_KEY')
 
 class TradingViewAlert(PubSubMessage):
     header: MessageHeader = MessageHeader()
-    data: Any
+    data: Dict[str, Any]
 
 
 app = FastAPI()
@@ -30,8 +30,7 @@ node = Node(node_name='sensors.sonar.front',
             ),
             debug=False)
 
-mqtt_pub = node.create_publisher(msg_type=TradingViewAlert,
-                                 topic=MQTT_TOPIC)
+mqtt_pub = node.create_mpublisher()
 
 
 @app.get("/")
@@ -54,8 +53,19 @@ async def webhook(request: Request):
             raise ValueError('Missing key!')
         key = data['key']
         if key == SEC_KEY:
-            msg = TradingViewAlert(data=data.pop('key'))
-            mqtt_pub.publish(msg)
+            if 'data' not in data:
+                raise ValueError(
+                    'Wring Alert message format, "data" field not found!')
+                return 400
+            msg = TradingViewAlert(data=data['data'])
+            if 'topic' in data:
+                topic = data['topic']
+                if topic == '':
+                    topic = MQTT_TOPIC
+            else:
+                topic = MQTT_TOPIC
+            print(f'Publishing TradingView Alert @ {topic}')
+            mqtt_pub.publish(msg, topic)
             return 200
         else:
             return 400
