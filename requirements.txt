@@ -1,6 +1,7 @@
 # app
-fastapi==0.95.0
-uvicorn
+fastapi>=0.100.0
+commlib-py>=0.11.2
 pydantic
-commlib-py==0.10.6
 python-dotenv
+rich
+uvicorn
