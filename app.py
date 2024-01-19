@@ -5,6 +5,9 @@ from commlib.transports.mqtt import ConnectionParameters
 from commlib.msg import MessageHeader, PubSubMessage
 from typing import Dict, Any
 from dotenv import load_dotenv
+from rich import print, pretty
+
+pretty.install()
 
 MQTT_HOST=os.getenv("MQTT_HOST", 'localhost')
 MQTT_PORT=os.getenv("MQTT_PORT", 1883)
@@ -12,6 +15,17 @@ MQTT_USERNAME=os.getenv("MQTT_USERNAME", '')
 MQTT_PASSWORD=os.getenv("MQTT_PASSWORD", '')
 MQTT_TOPIC=os.getenv("MQTT_TOPIC", 'tv_alerts')
 SEC_KEY=os.getenv("SEC_KEY", 'DEFAULT_KEY')
+DEBUG=os.getenv("DEBUG", 0)
+
+
+def print_config():
+    print('Starting TradingView MQTT Bridge')
+    print()
+    print('Configuration:')
+    print()
+    print(f'- MQTT Broker: {MQTT_HOST}:{MQTT_PORT}')
+    print(f'- Default MQTT Topic: {MQTT_TOPIC}')
+    print(f'- Security Key: {SEC_KEY}')
 
 
 class TradingViewAlert(PubSubMessage):
@@ -21,16 +35,18 @@ class TradingViewAlert(PubSubMessage):
 
 app = FastAPI()
 
-node = Node(node_name='sensors.sonar.front',
+node = Node(node_name='tradingview.mqtt_bridge',
             connection_params=ConnectionParameters(
                 host=MQTT_HOST,
                 port=MQTT_PORT,
                 username=MQTT_USERNAME,
                 password=MQTT_PASSWORD
             ),
-            debug=False)
+            debug=DEBUG)
 
 mqtt_pub = node.create_mpublisher()
+
+node.run()
 
 
 @app.get("/")
@@ -49,6 +65,7 @@ async def webhook(request: Request):
         raise ValueError('Alert Message must be of type application/json')
     elif 'application/json' in headers['content-type']:
         data = await request.json()
+        print(f'Received TV Event: {data}')
         if 'key' not in data:
             raise ValueError('Missing key!')
         key = data['key']
